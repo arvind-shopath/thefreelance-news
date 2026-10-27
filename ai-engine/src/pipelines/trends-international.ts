@@ -157,13 +157,10 @@ Instructions:
         contentEn: article.contentEn,
         image: imageUrl,
         categoryStr: article.category || 'world',
-        language: 'en',
         sourceName: `The FreeLance International (${topic.geo})`,
         sourceUrl: topic.sourceUrl || null,
         isGoogleTrends: true,
-        trendsKeyword: topic.title,
         trendsGeo: topic.geo,
-        trendsTimeframe: '24h',
         isEnglishOnly: true, // Strict isolation: Visible ONLY on /en/
         isPublished: true,
         seoTitle: article.headlineEn,

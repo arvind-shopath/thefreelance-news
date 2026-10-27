@@ -52,10 +52,10 @@ export async function runHoroscopePipeline() {
     for (const item of list) {
       if (!existingSigns.has(item.sign)) {
         const { error } = await supabase.from('Horoscope').upsert({
-          sign: item.sign,
+          zodiacSign: item.sign,
           prediction: item.prediction,
           date: today,
-        });
+        }, { onConflict: 'zodiacSign,date' });
         if (!error) inserted++;
       }
     }

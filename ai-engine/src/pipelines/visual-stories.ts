@@ -98,10 +98,10 @@ Format Guidelines:
       // Insert Slides
       const slideInserts = story.slides.map(s => ({
         postId: post.id,
-        order: s.order,
-        title: s.title,
-        content: s.content,
-        image: coverImage,
+        orderIndex: s.order,
+        headline: s.title,
+        caption: s.content,
+        imageUrl: coverImage,
       }));
 
       await supabase.from('StorySlide').insert(slideInserts);

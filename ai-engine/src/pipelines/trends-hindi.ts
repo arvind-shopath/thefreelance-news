@@ -172,13 +172,10 @@ ${sourceContext || topic.title}
         headlineEn: article.headlineEn,
         summaryEn: article.summaryEn,
         slugEn,
-        language: 'both',
         sourceName: 'The FreeLance ब्यूरो (Google Trends)',
         sourceUrl: topic.sourceUrl || null,
         isGoogleTrends: true,
-        trendsKeyword: topic.title,
         trendsGeo: 'IN',
-        trendsTimeframe: '24h',
         isEnglishOnly: false, // 100% visible on Hindi portal
         isPublished: true,
         seoTitle: article.headline,
