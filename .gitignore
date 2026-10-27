@@ -57,3 +57,6 @@ clean_*.js
 *.sh
 *.bat
 
+# Do not ignore public static assets
+!frontend/public/**
+

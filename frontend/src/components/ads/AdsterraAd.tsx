@@ -44,11 +44,15 @@ function getAdFrameUrl(key: string, width: number, height: number): string {
   return `/api/v1/analytics/ad-frame?key=${key}&w=${width}&h=${height}`;
 }
 
+const ADS_ENABLED = process.env.NEXT_PUBLIC_ENABLE_ADS === "true";
+
 export default function AdsterraAd({
   format = "leaderboard",
   className = "",
   label,
 }: AdsterraAdProps) {
+  if (!ADS_ENABLED) return null;
+
   const displayLabel = label || "विज्ञापन • ADVERTISEMENT";
 
   // Native Recommendation Banner

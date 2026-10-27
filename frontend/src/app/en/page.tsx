@@ -57,11 +57,6 @@ export default async function EnglishHome() {
     <main className="min-h-screen bg-[#0b0c10] text-gray-200">
       <Header />
       <BreakingNews post={breakingNews} posts={breakingPosts} tags={trendingTags as string[]} isEn={true} />
-      
-      {/* Top Banner - Header Ad */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-2 flex justify-center">
-        <AdsterraAd format="leaderboard" />
-      </div>
 
       {/* Hero Section */}
       <HeroSection db={db} isEn={true} heroMain={heroMain} heroSubPosts={heroSubs} />
