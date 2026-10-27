@@ -109,7 +109,7 @@ export default async function Home() {
                       title={section.title || "राज्य समाचार"} 
                       color={category?.color || "#eab308"} 
                     />
-                  ) : section.sectionType === 'category-grid' ? (
+                  ) : (section.sectionType === 'category-grid' || section.sectionType === 'category-block') && section.categorySlug !== 'sports' ? (
                     <CategoryGrid 
                       title={displayTitle} 
                       color={category?.color || "#ef4444"} 
@@ -117,7 +117,7 @@ export default async function Home() {
                       posts={getCategoryPosts(section.categorySlug, 5)}
                     />
                   ) : null}
-                  {section.sectionType === 'sports-section' && (
+                  {(section.sectionType === 'sports-section' || (section.sectionType === 'category-block' && section.categorySlug === 'sports')) && (
                     <SportsSection posts={getCategoryPosts('sports', 6)} />
                   )}
                   {section.sectionType === 'religion-section' && (() => {

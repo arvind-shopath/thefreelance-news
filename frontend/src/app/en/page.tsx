@@ -89,7 +89,7 @@ export default async function EnglishHome() {
 
               return (
                 <React.Fragment key={section.id}>
-                  {section.sectionType === 'category-grid' && (
+                  {(section.sectionType === 'category-grid' || section.sectionType === 'category-block') && section.categorySlug !== 'sports' && (
                     <CategoryGrid 
                       title={englishTitle} 
                       color={category?.color || "#ef4444"} 
@@ -98,7 +98,7 @@ export default async function EnglishHome() {
                       posts={getCategoryPosts(section.categorySlug, 5)}
                     />
                   )}
-                  {section.sectionType === 'sports-section' && (
+                  {(section.sectionType === 'sports-section' || (section.sectionType === 'category-block' && section.categorySlug === 'sports')) && (
                     <SportsSection posts={getCategoryPosts('sports', 6)} isEn={true} />
                   )}
                   {section.sectionType === 'religion-section' && (() => {

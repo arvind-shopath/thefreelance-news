@@ -37,7 +37,7 @@ async function tryFetchFromSupabase(endpoint: string) {
         .from('Category')
         .select('*')
         .order('name', { ascending: true });
-      if (!error && data && data.length > 0) return data;
+      if (!error && data) return data;
       return null;
     }
 
@@ -47,7 +47,7 @@ async function tryFetchFromSupabase(endpoint: string) {
         .from('HomepageSection')
         .select('*')
         .order('orderIndex', { ascending: true });
-      if (!error && data && data.length > 0) return data;
+      if (!error && data) return data;
       return null;
     }
 
@@ -56,7 +56,7 @@ async function tryFetchFromSupabase(endpoint: string) {
       const { data, error } = await supabase
         .from('AdPlacement')
         .select('*');
-      if (!error && data && data.length > 0) return data;
+      if (!error && data) return data;
       return null;
     }
 
@@ -66,7 +66,7 @@ async function tryFetchFromSupabase(endpoint: string) {
         .from('Horoscope')
         .select('*')
         .order('zodiacSign', { ascending: true });
-      if (!error && data && data.length > 0) return data;
+      if (!error && data) return data;
       return null;
     }
 
@@ -102,10 +102,19 @@ async function tryFetchFromSupabase(endpoint: string) {
       query = query.limit(limit);
 
       const { data, error } = await query;
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         return { data, total: data.length };
       }
       return null;
+    }
+
+    // 7. AI Keys (/ai-keys)
+    if (endpoint.startsWith('/ai-keys')) {
+      const { data, error } = await supabase
+        .from('AiKey')
+        .select('*');
+      if (!error && data) return data;
+      return [];
     }
   } catch (err) {
     console.warn(`[Supabase Fetch Fallback] Endpoint: ${endpoint}`, err);
