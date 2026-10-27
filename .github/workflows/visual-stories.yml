@@ -1,0 +1,38 @@
+name: "Daily Visual Stories Pipeline"
+
+on:
+  schedule:
+    # 02:55 UTC = 8:25 AM IST (Daily 10 Stories)
+    - cron: "55 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  run-visual-stories:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: "ai-engine/package.json"
+
+      - name: Install AI Engine Dependencies
+        run: |
+          cd ai-engine
+          npm ci
+
+      - name: Execute Visual Stories Pipeline
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+        run: |
+          cd ai-engine
+          npm run run:visual-stories

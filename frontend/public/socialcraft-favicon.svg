@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="fav-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED" />
+      <stop offset="50%" stop-color="#EC4899" />
+      <stop offset="100%" stop-color="#F97316" />
+    </linearGradient>
+    <filter id="fav-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle with glow -->
+  <rect x="8" y="8" width="112" height="112" rx="32" fill="#08071A" stroke="url(#fav-bg)" stroke-width="6" />
+  
+  <!-- Stylized Gradient S -->
+  <path d="M 80 42 C 74 34 58 32 48 38 C 38 44 40 56 54 60 L 74 66 C 88 70 90 82 80 90 C 70 98 52 96 44 86" 
+        stroke="url(#fav-bg)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  
+  <!-- Creative accent dots -->
+  <circle cx="86" cy="38" r="7" fill="#F43F5E" />
+  <circle cx="42" cy="90" r="6" fill="#A855F7" />
+  <circle cx="92" cy="74" r="4" fill="#FBBF24" />
+</svg>

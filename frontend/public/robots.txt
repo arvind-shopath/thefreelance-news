@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+Disallow: /arvind
+Disallow: /tfl/
+Disallow: /tfl/*
+Disallow: /api/
+
+User-agent: Googlebot
+Allow: /
+Disallow: /arvind
+Disallow: /tfl/
+Disallow: /tfl/*
+
+User-agent: Googlebot-News
+Allow: /
+Disallow: /arvind
+Disallow: /tfl/
+Disallow: /tfl/*
+
+Sitemap: https://news.thefreelance.in/sitemap.xml
+Sitemap: https://news.thefreelance.in/news-sitemap.xml

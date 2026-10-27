@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js build
+.next/
+out/
+build/
+dist/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Legacy VPS Backend (Replaced by ai-engine & Supabase)
+backend/
+*.env*
+*.json.bak
+*.bak
+
+# Archives & Temporary Debug Files in Root
+*.tar.gz
+/*.js
+/*.py
+/*.sql
+/1
+check_*.js
+check_*.py
+test_*.js
+test_*.py
+fix_*.js
+fix_*.sql
+fix_*.py
+scratch*.js
+scratch/
+temp_*
+audit_*.js
+clean_*.js
+*.jpg
+*.png
+*.sh
+*.bat
+

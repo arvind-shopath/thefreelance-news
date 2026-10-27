@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" fill="none">
+  <defs>
+    <linearGradient id="sc-brand-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A78BFA" />
+      <stop offset="50%" stop-color="#F472B6" />
+      <stop offset="100%" stop-color="#FB923C" />
+    </linearGradient>
+  </defs>
+  <text x="0" y="34" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="32" letter-spacing="-0.5" fill="url(#sc-brand-grad)">SocialCraft</text>
+</svg>

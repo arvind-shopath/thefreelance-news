@@ -1,0 +1,266 @@
+# thefreelance.in — AI & Rule-Based System (`ai_and_rule_based_system.md`)
+
+## Purpose
+
+यह document developer को clear guideline देता है कि **AI कहाँ use करना है, कहाँ नहीं करना है**, और कैसे एक **low-cost hybrid system** बनाना है.
+
+Goal:
+
+> Minimum cost में maximum automation + acceptable quality + SEO compliance
+
+---
+
+# 1) Core Principle (MANDATORY)
+
+```text
+Do NOT use AI for everything
+Use rules for 80% work
+Use AI only where necessary (20%)
+```
+
+System design:
+
+```text
+Rule Engine (Primary) + AI Layer (Selective)
+```
+
+---
+
+# 2) Full Content Pipeline
+
+```text
+RSS → Clean → Extract → Translate → Rewrite (Rule) → Enhance (AI Optional) → Image → Category → SEO → Verify → Publish
+```
+
+---
+
+# 3) Where AI SHOULD NOT be used ❌
+
+Avoid AI in:
+
+* RSS parsing
+* basic cleaning
+* image fetching
+* category mapping (rule-based)
+* scheduling
+
+Reason:
+
+* unnecessary cost
+* slower system
+
+---
+
+# 4) Where AI SHOULD be used ✅
+
+Use AI ONLY for:
+
+## 4.1 Headline Improvement
+
+* better Hindi headline
+* click-worthy but not clickbait
+
+## 4.2 Summary Generation
+
+* 2–3 line clean summary
+
+## 4.3 Language Cleanup
+
+* remove robotic translation
+* improve readability
+
+## 4.4 Optional Deep Rewrite (LIMITED)
+
+* only for top stories
+
+---
+
+# 5) Rule-Based Rewrite Engine (CORE)
+
+This is the main system.
+
+## 5.1 Input
+
+* translated text (Hindi)
+
+## 5.2 Processing Rules
+
+### Rule 1: Sentence Split
+
+* long paragraph → short sentences
+
+### Rule 2: Phrase Replacement Dictionary
+
+Example:
+
+```text
+has announced → घोषणा की है
+price cut → कीमत में कटौती
+launched → लॉन्च किया
+according to → के अनुसार
+```
+
+### Rule 3: Stop Words Removal
+
+* remove filler English artifacts
+
+### Rule 4: Structured Output Template
+
+```text
+Headline
+Summary
+Main Update
+Details
+Impact
+```
+
+---
+
+# 6) AI Usage Strategy (Cost Control)
+
+## Mode 1: No AI (Default)
+
+* 80% articles
+* only rule-based
+
+## Mode 2: Light AI
+
+* summary + headline polish
+
+## Mode 3: Full AI (LIMITED)
+
+* only trending / breaking news
+
+---
+
+# 7) AI Cost Control Rules (MANDATORY)
+
+```text
+max AI usage per day: configurable
+AI only for top X articles
+no AI for low priority content
+```
+
+Example:
+
+```text
+200 articles/day → only 20 AI processed
+```
+
+---
+
+# 8) Image Engine (NO AI)
+
+```text
+keyword extraction → search API → filter → attach
+```
+
+Rules:
+
+* no watermark
+* no logo
+* high resolution
+
+---
+
+# 9) Category Engine (RULE-BASED)
+
+Example:
+
+```text
+iphone → tech
+stock → business
+cricket → sports
+movie → entertainment
+```
+
+Use keyword dictionary + scoring.
+
+---
+
+# 10) SEO Engine (RULE + AI MIX)
+
+## Rule-based
+
+* slug generation
+* keyword extraction
+
+## AI (optional)
+
+* meta description refinement
+
+---
+
+# 11) Quality Check Layer
+
+Before publish:
+
+Check:
+
+```text
+headline present
+summary present
+image present
+category assigned
+SEO fields present
+```
+
+Reject if missing.
+
+---
+
+# 12) Developer Restrictions (IMPORTANT)
+
+Developer MUST NOT:
+
+* use paid AI for all articles
+* call API unnecessarily
+* increase cost without approval
+
+Developer MUST:
+
+* log AI usage
+* show cost metrics
+* provide toggle for AI on/off
+
+---
+
+# 13) Control Panel (CMS Requirement)
+
+Admin must control:
+
+* AI enable/disable
+* AI limit per day
+* priority article flag
+* rewrite mode selection
+
+---
+
+# 14) Final System Philosophy
+
+```text
+Cheap + Fast + Controlled
+```
+
+NOT:
+
+```text
+Expensive + Fully AI dependent
+```
+
+---
+
+# 15) Final Summary
+
+```text
+RSS brings data
+Rules process most of it
+AI improves selected content
+System publishes automatically
+```
+
+This ensures:
+
+* low cost
+* scalable system
+* SEO-friendly output

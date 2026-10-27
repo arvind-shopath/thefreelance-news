@@ -1,0 +1,42 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "ईरान ने स्ट्रेट ऑफ होर्मुज में सैन्य जहाजों की एंट्री पर लगाया बैन",
+      "slug": "iran-strait-of-hormuz-ban",
+      "summary": "ईरानी अधिकारी ने कहा है कि अब सैन्य जहाजों को स्ट्रेट ऑफ होर्मुज से गुजरने की अनुमति नहीं होगी।",
+      "category": "national",
+      "type": "general",
+      "image": "https://picsum.photos/seed/100/800/500",
+      "date": "18 अप्रैल 2026"
+    },
+    {
+      "id": "2",
+      "title": "गर्मियों में बेदाग और ग्लोइंग स्किन चाहिए? अपनाएं ये 8 आसान तरीके",
+      "slug": "summer-glowing-skin-tips",
+      "summary": "स्किन एक्सपर्ट ने बताए हैं गर्मियों के लिए सबसे बेहतरीन स्किनकेयर टिप्स।",
+      "category": "lifestyle",
+      "type": "gallery",
+      "image": "https://picsum.photos/seed/101/800/500",
+      "date": "18 अप्रैल 2026"
+    },
+    {
+      "id": "3",
+      "title": "सेंसेक्स में 1000 अंकों की भारी गिरावट, निवेशकों के डूबे करोड़ों रुपये",
+      "slug": "sensex-crash-today",
+      "summary": "शेयर बाजार में आज भयंकर बिकवाली देखी गई, सेंसेक्स 1000 अंक टूट गया।",
+      "category": "business",
+      "type": "general",
+      "image": "https://picsum.photos/seed/102/800/500",
+      "date": "18 अप्रैल 2026"
+    }
+  ],
+  "visualStories": [
+    {
+      "id": "1",
+      "title": "टॉप 5 स्मार्टफोन जिनकी कीमत हुई कम",
+      "slug": "top-5-smartphones-price-cut",
+      "image": "https://picsum.photos/seed/vs1/400/700"
+    }
+  ]
+}

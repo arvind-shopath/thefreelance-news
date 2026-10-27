@@ -1,0 +1,47 @@
+name: "Manual AI Automation Dispatcher"
+
+on:
+  workflow_dispatch:
+    inputs:
+      pipeline:
+        description: "Choose AI Pipeline to execute"
+        required: true
+        default: "trends-hindi"
+        type: choice
+        options:
+          - "trends-hindi"
+          - "trends-en"
+          - "visual-stories"
+          - "horoscope"
+          - "all"
+
+jobs:
+  dispatch-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: "ai-engine/package.json"
+
+      - name: Install Dependencies
+        run: |
+          cd ai-engine
+          npm ci
+
+      - name: Run Selected Pipeline (${{ github.event.inputs.pipeline }})
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+        run: |
+          cd ai-engine
+          npx tsx src/cli.ts ${{ github.event.inputs.pipeline }}
