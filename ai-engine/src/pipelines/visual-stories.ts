@@ -83,7 +83,7 @@ Format Guidelines:
           summaryEn: story.summary,
           image: coverImage,
           categoryStr: story.category || t.category,
-          postType: 'visual_story',
+          postType: 'visual-story',
           isEnglishOnly: true,
           isPublished: true,
         })
@@ -98,10 +98,10 @@ Format Guidelines:
       // Insert Slides
       const slideInserts = story.slides.map(s => ({
         postId: post.id,
-        orderIndex: s.order,
-        headline: s.title,
-        caption: s.content,
-        imageUrl: coverImage,
+        order: s.order,
+        title: s.title,
+        content: s.content,
+        image: coverImage,
       }));
 
       await supabase.from('StorySlide').insert(slideInserts);

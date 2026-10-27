@@ -49,7 +49,7 @@ export async function runHindiTrendsPipeline() {
   const since72h = new Date(Date.now() - 72 * 3600 * 1000).toISOString();
   const { data: recentPosts } = await supabase
     .from('Post')
-    .select('headline, headlineEn, trendsKeyword')
+    .select('headline, headlineEn')
     .gte('createdAt', since72h);
 
   const freshTopics: Array<{ title: string; sourceUrl?: string }> = [];

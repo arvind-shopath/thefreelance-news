@@ -6,10 +6,10 @@ export class GeminiService {
   private keys: string[] = [];
   private currentKeyIndex = 0;
   private readonly models = [
-    'gemini-2.0-flash',
-    'gemini-1.5-flash',
-    'gemini-2.5-flash',
-    'gemini-flash-latest',
+    'gemini-3.5-flash-lite',
+    'gemini-3.1-flash-lite',
+    'gemini-3.8-flash',
+    'gemini-flash-lite-latest',
   ];
 
   constructor() {
@@ -52,7 +52,11 @@ export class GeminiService {
               : { temperature: 0.3 },
           });
 
-          const result = await model.generateContent(prompt);
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 35000);
+
+          const result = await model.generateContent(prompt, { signal: controller.signal });
+          clearTimeout(timer);
           const responseText = result.response.text();
 
           if (responseText && responseText.trim().length > 0) {
