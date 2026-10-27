@@ -32,11 +32,13 @@ Topic: "${t.title}"
 Format Guidelines:
 1. Exactly 5 bite-sized, visually stunning slides.
 2. Each slide must have a punchy title (under 8 words) and an engaging 1-2 sentence description.
-3. Language: Engaging, modern English.
+3. Provide both Hindi and English titles and summaries for bilingual indexing.
 4. Output STRICT JSON:
 {
-  "headline": "Ultra-compelling story title (under 10 words)",
-  "summary": "1-sentence hook summary",
+  "headline": "आकर्षक हिंदी शीर्षक (10 शब्दों से कम)",
+  "headlineEn": "Ultra-compelling English story title (under 10 words)",
+  "summary": "1-वाक्य का हिंदी सार",
+  "summaryEn": "1-sentence hook summary in English",
   "category": "${t.category}",
   "slides": [
     { "order": 1, "title": "Slide 1 Title", "content": "Slide 1 description." },
@@ -51,40 +53,50 @@ Format Guidelines:
     try {
       const story = await gemini.generateJson<{
         headline: string;
+        headlineEn: string;
         summary: string;
+        summaryEn: string;
         category: string;
         slides: Array<{ order: number; title: string; content: string }>;
       }>(prompt);
 
       // Resolve clean, high-res vertical/landscape editorial photo
       const coverImage = await imageService.resolveEditorialPhoto({
-        headline: story.headline,
+        headline: story.headlineEn || story.headline,
         category: story.category || t.category,
         keywords: t.title,
       });
 
       const uniqueSuffix = Date.now().toString(36);
-      const slug = story.headline
+      const slugEn = (story.headlineEn || t.title)
         .toLowerCase()
         .replace(/[^a-z0-9\s-]/g, '')
         .trim()
         .replace(/\s+/g, '-')
         .slice(0, 80) + `-${uniqueSuffix}`;
 
+      const baseSlugHi = (story.headline || t.title)
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}\s]/gu, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .slice(0, 80);
+      const slug = `${baseSlugHi}-${uniqueSuffix}`;
+
       // Insert Post record
       const { data: post, error: postErr } = await supabase
         .from('Post')
         .insert({
-          headline: story.headline,
-          headlineEn: story.headline,
+          headline: story.headline || story.headlineEn,
+          headlineEn: story.headlineEn || story.headline,
           slug,
-          slugEn: slug,
-          summary: story.summary,
-          summaryEn: story.summary,
+          slugEn,
+          summary: story.summary || story.summaryEn,
+          summaryEn: story.summaryEn || story.summary,
           image: coverImage,
           categoryStr: story.category || t.category,
           postType: 'visual-story',
-          isEnglishOnly: true,
+          isEnglishOnly: false,
           isPublished: true,
         })
         .select('id')

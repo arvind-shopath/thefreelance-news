@@ -12,7 +12,7 @@ export async function runHindiTrendsPipeline() {
   const supabase = getSupabase();
 
   // 1. Fetch Candidates from Google Trends India (4H & 24H)
-  const candidateTopics: Array<{ title: string; sourceUrl?: string }> = [];
+  const candidateTopics: Array<{ title: string; sourceUrl?: string; targetCategory?: string }> = [];
 
   try {
     const rssFeed = await parser.parseURL('https://trends.google.com/trending/rss?geo=IN');
@@ -43,6 +43,29 @@ export async function runHindiTrendsPipeline() {
     console.warn(`[News-IN] RSS error: ${err.message}`);
   }
 
+  // Category coverage feeds to keep all homepage sections (world, entertainment, tech, lifestyle, business) fresh
+  const categoryFeeds = [
+    { cat: 'world', url: 'https://news.google.com/rss/headlines/section/topic/WORLD?hl=hi&gl=IN&ceid=IN:hi' },
+    { cat: 'entertainment', url: 'https://news.google.com/rss/headlines/section/topic/ENTERTAINMENT?hl=hi&gl=IN&ceid=IN:hi' },
+    { cat: 'business', url: 'https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=hi&gl=IN&ceid=IN:hi' },
+    { cat: 'tech-auto', url: 'https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=hi&gl=IN&ceid=IN:hi' },
+    { cat: 'lifestyle', url: 'https://news.google.com/rss/headlines/section/topic/HEALTH?hl=hi&gl=IN&ceid=IN:hi' },
+  ];
+
+  for (const feed of categoryFeeds) {
+    try {
+      const feedRes = await parser.parseURL(feed.url).catch(() => null);
+      if (feedRes?.items) {
+        for (const it of feedRes.items.slice(0, 4)) {
+          const title = (it.title || '').replace(/\s*-\s*[^-]+$/, '').trim();
+          if (title && !candidateTopics.some(c => c.title.toLowerCase() === title.toLowerCase())) {
+            candidateTopics.push({ title, sourceUrl: it.link, targetCategory: feed.cat });
+          }
+        }
+      }
+    } catch {}
+  }
+
   console.log(`[Hindi Trends] Found ${candidateTopics.length} raw candidates. Checking 72h deduplication...`);
 
   // Fetch recent posts for deduplication
@@ -52,7 +75,7 @@ export async function runHindiTrendsPipeline() {
     .select('headline, headlineEn')
     .gte('createdAt', since72h);
 
-  const freshTopics: Array<{ title: string; sourceUrl?: string }> = [];
+  const freshTopics: Array<{ title: string; sourceUrl?: string; targetCategory?: string }> = [];
   for (const cand of candidateTopics) {
     const isDup = await dedupService.isDuplicateStory(cand.title, recentPosts || []);
     if (!isDup) {
@@ -68,9 +91,9 @@ export async function runHindiTrendsPipeline() {
 
   let publishedCount = 0;
 
-  // Process fresh candidates (limit to 10 per run to respect API quotas)
-  for (const topic of freshTopics.slice(0, 10)) {
-    console.log(`\n📰 Processing Topic: "${topic.title}"`);
+  // Process fresh candidates (limit to 12 per run to respect API quotas while covering all sections)
+  for (const topic of freshTopics.slice(0, 12)) {
+    console.log(`\n📰 Processing Topic: "${topic.title}" (${topic.targetCategory || 'general'})`);
 
     // STEP A: Fetch related articles from Google News RSS for multi-source synthesis
     const searchUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(topic.title)}+when:1d&hl=hi&gl=IN&ceid=IN:hi`;
@@ -98,10 +121,13 @@ export async function runHindiTrendsPipeline() {
       .map((r, i) => `[Source ${i + 1} - ${r.source}]: ${r.title} | ${r.snippet}`)
       .join('\n');
 
+    const targetCat = topic.targetCategory || '';
+
     // STEP B: Gemini Multi-Source Cross-Synthesis (Senior On-the-Ground Reporter Voice)
     const prompt = `
 आप "The FreeLance" के वरिष्ठ फील्ड रिपोर्टर व खोजी पत्रकार हैं।
 ट्रेंडिंग विषय: "${topic.title}"
+${targetCat ? `अपेक्षित श्रेणी: "${targetCat}"` : ''}
 
 विभिन्न मीडिया स्रोतों से प्राप्त प्राथमिक जानकारी:
 ${sourceContext || topic.title}
@@ -117,7 +143,7 @@ ${sourceContext || topic.title}
   "content": "संपूर्ण लेख HTML पैराग्राफ्स (<p>...</p>, <h3>...</h3>) में (400+ शब्द)",
   "headlineEn": "English Headline for International & SEO indexing",
   "summaryEn": "English Summary (1-2 sentences)",
-  "category": "national|politics|business|sports|entertainment|tech-auto|lifestyle|religion|crime|states",
+  "category": "${targetCat || 'national|politics|business|sports|entertainment|tech-auto|lifestyle|religion|crime|states'}",
   "tags": "टैग1, टैग2, टैग3, टैग4",
   "keywords": "SEO Keywords comma separated"
 }
@@ -136,11 +162,12 @@ ${sourceContext || topic.title}
       }>(prompt);
 
       // STEP C: Resolve 6-Step Editorial Photo
+      const resolvedCat = article.category || topic.targetCategory || 'national';
       const imageUrl = await imageService.resolveEditorialPhoto({
         primaryUrl: topic.sourceUrl,
         relatedUrls: relatedArticles.map(r => r.link).filter(Boolean),
         headline: article.headline,
-        category: article.category || 'national',
+        category: resolvedCat,
         keywords: article.keywords,
       });
 
@@ -168,7 +195,7 @@ ${sourceContext || topic.title}
         summary: article.summary,
         content: article.content,
         image: imageUrl,
-        categoryStr: article.category || 'national',
+        categoryStr: resolvedCat,
         headlineEn: article.headlineEn,
         summaryEn: article.summaryEn,
         slugEn,

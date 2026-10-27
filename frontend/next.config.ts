@@ -23,16 +23,20 @@ const nextConfig: NextConfig = {
   },
 
   async rewrites() {
-    return [
-      {
-        source: '/api/v1/:path*',
-        destination: `${API_BASE}/:path*`,
-      },
-      {
-        source: '/uploads/:path*',
-        destination: `${SITE_URL}/uploads/:path*`,
-      },
-    ];
+    return {
+      beforeFiles: [],
+      afterFiles: [],
+      fallback: [
+        {
+          source: '/api/v1/:path*',
+          destination: `${API_BASE}/:path*`,
+        },
+        {
+          source: '/uploads/:path*',
+          destination: `${SITE_URL}/uploads/:path*`,
+        },
+      ],
+    };
   },
 
   async headers() {

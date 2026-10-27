@@ -69,6 +69,11 @@ export default async function Home() {
       <ElectionResultsSection />
       <BreakingNews post={breakingNews} posts={breakingPosts} tags={trendingTags as string[]} />
 
+      {/* Top Banner - Header Ad */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-2 flex justify-center">
+        <AdsterraAd format="leaderboard" />
+      </div>
+
       <HeroSection db={db} heroMain={heroMain} heroSubPosts={heroSubs} />
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">

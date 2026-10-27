@@ -4,11 +4,12 @@ import { getPostImage } from "@/lib/constants";
 import PostViews, { getPostViews } from "@/components/common/PostViews";
 import VideoBadge, { isVideoPost } from "@/components/common/VideoBadge";
 
-async function getCategoryPosts(slug: string) {
+import { apiFetch } from "@/lib/actions";
+
+async function getCategoryPosts(slug: string, isEn?: boolean) {
   try {
-    const res = await fetch(`http://localhost:4000/api/v1/articles?category=${slug}&limit=6`, { cache: 'no-store' });
-    const json = await res.json();
-    return json.data || [];
+    const res = await apiFetch(`/articles?compact=true&category=${slug}&limit=6&lang=${isEn ? 'en' : 'hi'}`);
+    return res?.data || [];
   } catch (e) {
     return [];
   }
@@ -26,12 +27,12 @@ export default async function CategoryGrid({
   color: string; 
   subCategories?: string[]; 
   categorySlug?: string; 
-  isEn?: boolean;
+  isEn?: boolean; 
   posts?: any[];
 }) {
-  const livePosts = (passedPosts !== undefined)
+  const livePosts = (passedPosts !== undefined && passedPosts.length > 0)
     ? passedPosts
-    : (categorySlug ? await getCategoryPosts(categorySlug) : []);
+    : (categorySlug ? await getCategoryPosts(categorySlug, isEn) : []);
   
   if (!livePosts || livePosts.length === 0) return null;
   

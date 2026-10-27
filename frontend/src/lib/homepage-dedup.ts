@@ -340,15 +340,36 @@ export function getDeduplicatedHomepageSections(posts: any[], isEn: boolean = fa
       });
       clusterCandidates.forEach((p: any) => seenIds.add(p.id));
     } else {
-      // Incomplete cluster -> Today's Topic is OFF!
+      // Fallback: If no tight entity cluster, display top leading stories so Hero is vibrant
+      if (validGeneral.length >= 3) {
+        heroMain = validGeneral[0];
+        heroSubs = validGeneral.slice(1, 5);
+        seenIds.add(heroMain.id);
+        chosenPosts.push(heroMain);
+        heroSubs.forEach((p: any) => {
+          seenIds.add(p.id);
+          chosenPosts.push(p);
+        });
+      } else {
+        heroMain = null;
+        heroSubs = [];
+      }
+    }
+  } else {
+    // Fallback: If no fresh cluster, display top leading stories so Hero is vibrant
+    if (validGeneral.length >= 3) {
+      heroMain = validGeneral[0];
+      heroSubs = validGeneral.slice(1, 5);
+      seenIds.add(heroMain.id);
+      chosenPosts.push(heroMain);
+      heroSubs.forEach((p: any) => {
+        seenIds.add(p.id);
+        chosenPosts.push(p);
+      });
+    } else {
       heroMain = null;
       heroSubs = [];
     }
-  } else {
-    // NO FRESH TODAY'S TOPIC CLUSTER -> TODAY'S TOPIC IS STRICTLY OFF!
-    // No fake hijacking of generic news; MainSection takes the lead cleanly.
-    heroMain = null;
-    heroSubs = [];
   }
 
   // ── 1.5 EDITORIAL WEIGHTAGE & TIME-DECAY SCORING ENGINE ──

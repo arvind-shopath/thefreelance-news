@@ -7,7 +7,7 @@ const API_BASE = process.env.INTERNAL_API_BASE || process.env.NEXT_PUBLIC_API_BA
 const ADMIN_SECRET = process.env.ADMIN_API_SECRET || "tfl_master_internal_admin_token_2026_xyz9723338321";
 
 // Helper for Supabase PostgREST direct query
-async function tryFetchFromSupabase(endpoint: string) {
+export async function tryFetchFromSupabase(endpoint: string) {
   const supabase = getPublicSupabase();
   if (!supabase) return null;
 
@@ -70,6 +70,16 @@ async function tryFetchFromSupabase(endpoint: string) {
       return null;
     }
 
+    // 5b. RSS Feeds (/feeds)
+    if (endpoint === '/feeds' || endpoint.startsWith('/feeds?')) {
+      const { data, error } = await supabase
+        .from('RssFeed')
+        .select('*')
+        .order('name', { ascending: true });
+      if (!error && data) return data;
+      return [];
+    }
+
     // 6. Articles list (/articles?...)
     if (endpoint.startsWith('/articles')) {
       const url = new URL(`https://dummy.local${endpoint}`);
@@ -87,7 +97,9 @@ async function tryFetchFromSupabase(endpoint: string) {
       if (postType && postType !== 'all') {
         query = query.eq('postType', postType);
       }
-      if (lang === 'en') {
+      if (postType === 'visual-story') {
+        // Visual stories: fetch all published visual stories, language filter applied downstream with fallback
+      } else if (lang === 'en') {
         query = query.or('isEnglishOnly.eq.true,headlineEn.neq.""');
       } else if (lang === 'hi') {
         query = query.eq('isEnglishOnly', false);
@@ -288,7 +300,7 @@ export async function getDb(lang: 'hi' | 'en' = 'hi') {
   );
   const combinedVisualStories = (langFilteredStories.length > 0 
     ? langFilteredStories 
-    : posts.filter((p: any) => (p.postType === 'visual-story' || p.postType === 'story') && (lang === 'en' ? (p.isEnglishOnly || p.headlineEn) : !p.isEnglishOnly))
+    : (rawVisualStories.length > 0 ? rawVisualStories : posts.filter((p: any) => p.postType === 'visual-story' || p.postType === 'story'))
   ).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const now = new Date();
