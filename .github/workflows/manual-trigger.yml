@@ -11,6 +11,7 @@ on:
         options:
           - "trends-hindi"
           - "trends-en"
+          - "viral-videos"
           - "visual-stories"
           - "horoscope"
           - "all"

@@ -8,6 +8,7 @@
     "run:trends-hi": "tsx src/cli.ts trends-hindi",
     "run:trends-en": "tsx src/cli.ts trends-en",
     "run:visual-stories": "tsx src/cli.ts visual-stories",
+    "run:viral-videos": "tsx src/cli.ts viral-videos",
     "run:horoscope": "tsx src/cli.ts horoscope",
     "run:all": "tsx src/cli.ts all"
   },

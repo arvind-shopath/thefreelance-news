@@ -2,6 +2,7 @@ import { runHindiTrendsPipeline } from './pipelines/trends-hindi.js';
 import { runInternationalTrendsPipeline } from './pipelines/trends-international.js';
 import { runVisualStoriesPipeline } from './pipelines/visual-stories.js';
 import { runHoroscopePipeline } from './pipelines/horoscope.js';
+import { runViralVideosPipeline } from './pipelines/viral-videos.js';
 
 async function main() {
   const command = process.argv[2] || 'all';
@@ -34,16 +35,23 @@ async function main() {
         await runHoroscopePipeline();
         break;
 
+      case 'viral-videos':
+      case 'viral':
+      case 'videos':
+        await runViralVideosPipeline();
+        break;
+
       case 'all':
         console.log('--- Running All Active AI Pipelines ---');
         await runHindiTrendsPipeline();
         await runInternationalTrendsPipeline();
+        await runViralVideosPipeline();
         await runHoroscopePipeline();
         break;
 
       default:
         console.error(`Unknown command: "${command}"`);
-        console.log(`Available commands: trends-hindi, trends-en, visual-stories, horoscope, all`);
+        console.log(`Available commands: trends-hindi, trends-en, visual-stories, viral-videos, horoscope, all`);
         process.exit(1);
     }
 

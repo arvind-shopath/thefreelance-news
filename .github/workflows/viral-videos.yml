@@ -1,0 +1,42 @@
+name: "Twitter / X Viral Videos Editorial Engine"
+
+on:
+  schedule:
+    # Run every 4 hours at the 15th minute 24x7 (Rule 8: @Cron('15 */4 * * *'))
+    - cron: '15 */4 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: tfl-viral-videos
+  cancel-in-progress: false
+
+jobs:
+  viral-videos-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: "ai-engine/package.json"
+
+      - name: Install AI Engine Dependencies
+        run: |
+          cd ai-engine
+          npm ci
+
+      - name: Execute Twitter / X Viral Videos Pipeline
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+        run: |
+          cd ai-engine
+          npm run run:viral-videos
