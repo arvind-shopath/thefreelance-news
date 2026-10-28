@@ -50,40 +50,17 @@ export const metadata: Metadata = {
   },
 };
 
-import { headers } from 'next/headers';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import SocialBarAd from '@/components/ads/SocialBarAd';
 import PushNotificationPrompt from '@/components/notifications/PushNotificationPrompt';
+import NavigationProgressBar from '@/components/common/NavigationProgressBar';
+import React, { Suspense } from 'react';
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headersList = await headers();
-  const host = headersList.get('host') || '';
-  const isSocialCraft = host.startsWith('socialcraft.');
-
-  if (isSocialCraft) {
-    return (
-      <html
-        lang="en"
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark bg-[#08071A]`}
-      >
-        <head>
-          <link rel="icon" type="image/svg+xml" href="/socialcraft-favicon.svg" />
-          <link rel="icon" type="image/png" sizes="32x32" href="/socialcraft-icon-32.png" />
-          <link rel="icon" type="image/png" sizes="512x512" href="/socialcraft-icon.png" />
-          <link rel="apple-touch-icon" href="/socialcraft-icon.png" />
-          <meta name="theme-color" content="#08071A" />
-        </head>
-        <body className="min-h-screen bg-[#08071A] text-white">
-          {children}
-        </body>
-      </html>
-    );
-  }
-
   return (
     <html
       lang="hi"
@@ -155,6 +132,9 @@ export default async function RootLayout({
         <link rel="alternate" type="application/rss+xml" title="The FreeLance (English Portal Feed)" href={`${SITE_URL}/en/feed.xml`} />
       </head>
       <body className="min-h-screen flex flex-col bg-[#0b0c10] text-gray-200">
+        <Suspense fallback={null}>
+          <NavigationProgressBar />
+        </Suspense>
         <ThemeProvider>
           <SiteWrapper>
             {children}

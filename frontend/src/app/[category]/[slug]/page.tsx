@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import React from 'react';
 import Image from "next/image";
 import Link from "next/link";
-import { apiFetch, getDb } from "@/lib/actions";
+import { apiFetch, getArticlePageData } from "@/lib/actions";
 import Header from "@/components/layout/Header";
 import PhotoGalleryPost from "@/components/post/PhotoGalleryPost";
 import VisualStoryPost from "@/components/post/VisualStoryPost";
@@ -24,6 +24,9 @@ import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import ArticleSupportBanner from "@/components/post/ArticleSupportBanner";
 import ContextualReadMore from "@/components/post/ContextualReadMore";
 import MobileReadNextPrompt from "@/components/post/MobileReadNextPrompt";
+
+// News Portal Best Practice: 60s Edge ISR Caching for Instant Page Transitions
+export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string, slug: string }> }): Promise<Metadata> {
   const { category, slug } = await params;
@@ -112,8 +115,8 @@ export default async function PostPage({ params }: { params: Promise<{ category:
     redirect(`/en/${post.categoryStr || decodedCategory}/${post.slugEn || post.slug}`);
   }
 
-  const db = await getDb();
   const postCategory = post.categoryStr || decodedCategory;
+  const articleContext = await getArticlePageData(postCategory, 'hi');
 
   // 1. High-precision keyword extraction for topic clustering (e.g., नौकरी, भर्ती, परीक्षा, रिजल्ट, बजट, चुनाव, क्रिकेट)
   const postTags = post.tags ? post.tags.split(',').map((t: string) => t.trim().toLowerCase()).filter(Boolean) : [];
@@ -181,7 +184,7 @@ export default async function PostPage({ params }: { params: Promise<{ category:
   // 3. Pool posts from live targeted query + in-memory category posts
   const combinedCategoryPool = [
     ...liveTargetedPosts,
-    ...db.posts.filter((p: any) => !isCurrentPost(p) && p.categoryStr === postCategory)
+    ...articleContext.categoryPosts.filter((p: any) => !isCurrentPost(p))
   ];
 
   // Robust deduplication across ID, slug, and headline
@@ -242,8 +245,8 @@ export default async function PostPage({ params }: { params: Promise<{ category:
     ? relevantCategoryPosts
     : [
         ...relevantCategoryPosts,
-        ...db.posts.filter((p: any) => !isCurrentPost(p) && p.categoryStr === postCategory && !uniqueCategoryPosts.some((r: any) => String(r.id) === String(p.id) || r.slug === p.slug)),
-        ...db.posts.filter((p: any) => !isCurrentPost(p) && !uniqueCategoryPosts.some((r: any) => String(r.id) === String(p.id) || r.slug === p.slug))
+        ...articleContext.categoryPosts.filter((p: any) => !isCurrentPost(p) && !uniqueCategoryPosts.some((r: any) => String(r.id) === String(p.id) || r.slug === p.slug)),
+        ...articleContext.recentPosts.filter((p: any) => !isCurrentPost(p) && !uniqueCategoryPosts.some((r: any) => String(r.id) === String(p.id) || r.slug === p.slug))
       ]).filter((p: any) => !isCurrentPost(p)).slice(0, 8);
   const relatedPosts = fallbackRelated;
 
@@ -277,16 +280,16 @@ export default async function PostPage({ params }: { params: Promise<{ category:
     ? sidebarCategoryPosts
     : [
         ...sidebarCategoryPosts,
-        ...db.posts.filter((p: any) => !isCurrentPost(p) && !sidebarCategoryPosts.some((s: any) => String(s.id) === String(p.id) || s.slug === p.slug))
+        ...articleContext.recentPosts.filter((p: any) => !isCurrentPost(p) && !sidebarCategoryPosts.some((s: any) => String(s.id) === String(p.id) || s.slug === p.slug))
       ]).slice(0, 6);
-  const visualStories = db.visualStories || [];
+  const visualStories = articleContext.visualStories || [];
 
   const categoryStr = post.categoryStr || decodedCategory;
-  const categoryObj = db.categories.find((c: any) => c.slug === categoryStr);
+  const categoryObj = articleContext.categories.find((c: any) => c.slug === categoryStr);
   const categoryName = categoryObj?.name || categoryStr.toUpperCase();
   const categoryColor = categoryObj?.color || "#ef4444";
 
-  const getAd = (slot: string) => db.ads?.find((a: any) => a.slotName === slot);
+  const getAd = (slot: string) => articleContext.ads?.find((a: any) => a.slotName === slot);
   const midAd = getAd('mid-article');
   const sidebarAd = getAd('sidebar-rect');
   const topAd = getAd('top-banner');

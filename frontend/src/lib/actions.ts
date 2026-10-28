@@ -88,8 +88,13 @@ export async function tryFetchFromSupabase(endpoint: string) {
       const lang = url.searchParams.get('lang');
       const postType = url.searchParams.get('postType');
       const sortBy = url.searchParams.get('sortBy');
+      const isCompact = url.searchParams.get('compact') === 'true';
 
-      let query = supabase.from('Post').select('*').eq('isPublished', true);
+      const selectCols = isCompact
+        ? 'id, headline, headlineEn, slug, slugEn, summary, summaryEn, image, imageCaption, categoryStr, state, city, tags, author, postType, views, isFeatured, isTrending, isBreaking, isPublished, isEnglishOnly, createdAt'
+        : '*';
+
+      let query = supabase.from('Post').select(selectCols).eq('isPublished', true);
 
       if (cat && cat !== 'all') {
         query = query.eq('categoryStr', cat);
@@ -383,6 +388,25 @@ export async function getDb(lang: 'hi' | 'en' = 'hi') {
     ads: ads || [],
     heroPosts: heroPosts.length > 0 ? heroPosts : posts.slice(0, 10),
     mainPosts: mainPosts.length > 0 ? mainPosts : posts
+  };
+}
+
+// Ultra-fast Article Page Context Data (Only 5 targeted queries instead of 21 heavy queries in getDb)
+export async function getArticlePageData(categoryStr: string, lang: 'hi' | 'en' = 'hi') {
+  const [categoryArticlesRes, recentArticlesRes, visualStoriesRes, categoriesRes, adsRes] = await Promise.all([
+    apiFetch(`/articles?compact=true&category=${categoryStr}&limit=12&lang=${lang}`),
+    apiFetch(`/articles?compact=true&limit=10&lang=${lang}`),
+    apiFetch(`/articles?postType=visual-story&limit=8&lang=${lang}`),
+    apiFetch('/categories'),
+    apiFetch('/ads'),
+  ]);
+
+  return {
+    categories: categoriesRes || [],
+    ads: adsRes || [],
+    categoryPosts: categoryArticlesRes?.data || [],
+    recentPosts: recentArticlesRes?.data || [],
+    visualStories: visualStoriesRes?.data || [],
   };
 }
 

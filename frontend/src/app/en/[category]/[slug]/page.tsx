@@ -2,8 +2,11 @@ import type { Metadata } from 'next';
 import React from 'react';
 import Image from "next/image";
 import Link from "next/link";
-import { apiFetch, getDbEn } from "@/lib/actions";
+import { apiFetch, getArticlePageData } from "@/lib/actions";
 import Header from "@/components/layout/Header";
+
+// News Portal Best Practice: 60s Edge ISR Caching for Instant Page Transitions
+export const revalidate = 60;
 import PhotoGalleryPost from "@/components/post/PhotoGalleryPost";
 import ArticleCoverImage from "@/components/post/ArticleCoverImage";
 import SocialEmbedLoader from "@/components/post/SocialEmbedLoader";
@@ -141,8 +144,8 @@ export default async function EnglishPostPage({ params }: { params: Promise<{ ca
   const summary = post.summaryEn || post.summary;
   const content = ensureHtml(post.contentEn || post.content);
 
-  const db = await getDbEn();
   const postCategory = post.categoryStr || category;
+  const articleContext = await getArticlePageData(postCategory, 'en');
 
   // Extract English keywords for topic matching
   const postTags = post.tags ? post.tags.split(',').map((t: string) => t.trim().toLowerCase()).filter(Boolean) : [];
@@ -208,7 +211,7 @@ export default async function EnglishPostPage({ params }: { params: Promise<{ ca
 
   const combinedCategoryPool = [
     ...liveTargetedPosts,
-    ...db.posts.filter((p: any) => !isCurrentPost(p) && p.categoryStr === postCategory)
+    ...articleContext.categoryPosts.filter((p: any) => !isCurrentPost(p))
   ];
 
   // Robust deduplication across ID, slug, and headline
@@ -259,8 +262,8 @@ export default async function EnglishPostPage({ params }: { params: Promise<{ ca
     ? relevantCategoryPosts
     : [
         ...relevantCategoryPosts,
-        ...db.posts.filter((p: any) => !isCurrentPost(p) && p.categoryStr === postCategory && !uniqueCategoryPosts.some((r: any) => String(r.id) === String(p.id) || r.slug === p.slug)),
-        ...db.posts.filter((p: any) => !isCurrentPost(p) && !uniqueCategoryPosts.some((r: any) => String(r.id) === String(p.id) || r.slug === p.slug))
+        ...articleContext.categoryPosts.filter((p: any) => !isCurrentPost(p) && !uniqueCategoryPosts.some((r: any) => String(r.id) === String(p.id) || r.slug === p.slug)),
+        ...articleContext.recentPosts.filter((p: any) => !isCurrentPost(p) && !uniqueCategoryPosts.some((r: any) => String(r.id) === String(p.id) || r.slug === p.slug))
       ]).filter((p: any) => !isCurrentPost(p)).slice(0, 8);
   const relatedPosts = fallbackRelated;
   const relatedPostsEn = relatedPosts.map((p: any) => ({
@@ -549,7 +552,7 @@ export default async function EnglishPostPage({ params }: { params: Promise<{ ca
                 <span>Trending Worldwide</span>
               </h3>
               <div className="flex flex-col gap-4">
-                {db.posts.slice(0, 6).map((item: any, idx: number) => (
+                {articleContext.recentPosts.slice(0, 6).map((item: any, idx: number) => (
                   <Link
                     key={item.id}
                     href={`/en/${item.categoryStr}/${item.slug}`}

@@ -22,6 +22,9 @@ const PhotoGallerySection= dynamic(() => import("@/components/home/PhotoGalleryS
 const EducationSection   = dynamic(() => import("@/components/home/EducationSection"),   { ssr: true });
 const StateCategorySection = dynamic(() => import("@/components/home/StateCategorySection"), { ssr: true });
 
+// News Portal Best Practice: 60s Edge ISR Caching for Instant Page Transitions
+export const revalidate = 60;
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://news.thefreelance.in";
 
 export const metadata = {

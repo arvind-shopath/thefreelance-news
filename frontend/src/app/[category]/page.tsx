@@ -10,6 +10,9 @@ import AdsterraAd from "@/components/ads/AdsterraAd";
 import NativeBannerAd from "@/components/ads/NativeBannerAd";
 import PostViews, { getPostViews } from "@/components/common/PostViews";
 
+// News Portal Best Practice: 60s Edge ISR Caching for Instant Page Transitions
+export const revalidate = 60;
+
 const categoryConfig: Record<string, { title: string, color: string, icon: string }> = {
   national: { title: "देश", color: "#2563eb", icon: "🇮🇳" },
   desh: { title: "देश", color: "#2563eb", icon: "🇮🇳" },
