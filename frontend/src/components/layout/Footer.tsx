@@ -66,13 +66,13 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="footer-preserve w-full bg-[#0b0c10] text-gray-300 border-t border-gray-800/80 pt-10 pb-24 md:pb-10 select-none">
+    <footer className="footer-preserve w-full bg-white dark:bg-[#0b0c10] text-slate-700 dark:text-gray-300 border-t border-slate-200 dark:border-gray-800/80 pt-10 pb-24 md:pb-10 select-none transition-colors">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
 
 
         {/* TOP SECTION: BRAND & 3 BALANCED COLUMNS (5 items each) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-gray-800/60">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-slate-200 dark:border-gray-800/60">
           
           {/* Col 1: Brand Info (Spans 2 columns) */}
           <div className="lg:col-span-2 space-y-4">
@@ -86,16 +86,16 @@ export default function Footer() {
               />
             </Link>
             {isEn ? (
-              <p className="text-sm text-gray-400 leading-relaxed max-w-sm">
-                <strong className="text-white">The Freelance</strong> is India's most unbiased and modern digital news portal, delivering verified, independent journalism across national affairs, politics, business, technology, sports, and culture.
+              <p className="text-sm text-slate-600 dark:text-gray-400 leading-relaxed max-w-sm">
+                <strong className="text-slate-900 dark:text-white">The Freelance</strong> is India's most unbiased and modern digital news portal, delivering verified, independent journalism across national affairs, politics, business, technology, sports, and culture.
               </p>
             ) : (
-              <p className="text-sm text-gray-400 leading-relaxed max-w-sm">
-                <strong className="text-white">The Freelance</strong> भारत का सबसे निष्पक्ष और आधुनिक डिजिटल हिंदी न्यूज़ पोर्टल है। देश, दुनिया, राजनीति, तकनीक, सिनेमा, खेल और स्थानीय सरोकारों से जुड़ी हर खबर निष्पक्षता के साथ।
+              <p className="text-sm text-slate-600 dark:text-gray-400 leading-relaxed max-w-sm">
+                <strong className="text-slate-900 dark:text-white">The Freelance</strong> भारत का सबसे निष्पक्ष और आधुनिक डिजिटल हिंदी न्यूज़ पोर्टल है। देश, दुनिया, राजनीति, तकनीक, सिनेमा, खेल और स्थानीय सरोकारों से जुड़ी हर खबर निष्पक्षता के साथ।
               </p>
             )}
             <div className="flex items-center gap-2.5 pt-2">
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-700 dark:text-gray-400 uppercase tracking-wider">
                 {isEn ? "Follow Us:" : "सोशल मीडिया:"}
               </span>
               <a href="https://facebook.com/thefreelancein" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="social-btn keep-white w-8 h-8 rounded-full bg-[#1877f2] hover:scale-110 text-white flex items-center justify-center transition-all shadow">
@@ -118,13 +118,13 @@ export default function Footer() {
 
           {/* Col 2: Categories (5 items) */}
           <div>
-            <h4 className="text-white text-sm font-black uppercase tracking-wider mb-4 border-l-2 border-red-600 pl-2">
+            <h4 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-wider mb-4 border-l-2 border-red-600 pl-2">
               {isEn ? "Main Categories" : "मुख्य श्रेणियां"}
             </h4>
             <ul className="space-y-2.5 text-xs">
               {categories.slice(0, 5).map((c) => (
                 <li key={c.href}>
-                  <Link href={c.href} className="hover:text-red-400 transition-colors">
+                  <Link href={c.href} className="text-slate-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors">
                     {c.label}
                   </Link>
                 </li>
@@ -134,13 +134,13 @@ export default function Footer() {
 
           {/* Col 3: More Categories (5 items) */}
           <div>
-            <h4 className="text-white text-sm font-black uppercase tracking-wider mb-4 border-l-2 border-blue-600 pl-2">
+            <h4 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-wider mb-4 border-l-2 border-blue-600 pl-2">
               {isEn ? "Special Segments" : "विशेष सेगमेंट"}
             </h4>
             <ul className="space-y-2.5 text-xs">
               {categories.slice(5).map((c) => (
                 <li key={c.href}>
-                  <Link href={c.href} className="hover:text-blue-400 transition-colors">
+                  <Link href={c.href} className="text-slate-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
                     {c.label}
                   </Link>
                 </li>
@@ -150,13 +150,13 @@ export default function Footer() {
 
           {/* Col 4: Quick Links (5 items balanced) */}
           <div>
-            <h4 className="text-white text-sm font-black uppercase tracking-wider mb-4 border-l-2 border-amber-500 pl-2">
+            <h4 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-wider mb-4 border-l-2 border-amber-500 pl-2">
               {isEn ? "Quick Links" : "क्विक लिंक्स"}
             </h4>
             <ul className="space-y-2.5 text-xs">
               {quickLinks.map((q) => (
                 <li key={q.href}>
-                  <Link href={q.href} className="hover:text-amber-400 transition-colors">
+                  <Link href={q.href} className="text-slate-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors">
                     {q.label}
                   </Link>
                 </li>
@@ -167,22 +167,22 @@ export default function Footer() {
         </div>
 
         {/* SUB-MENU STRIP: Corporate, Editorial & Policy Links (Directly Above Copyright) */}
-        <div className="py-4 border-b border-gray-800/60 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-400 font-medium">
+        <div className="py-4 border-b border-slate-200 dark:border-gray-800/60 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-600 dark:text-gray-400 font-medium">
           {subMenuLinks.map((item, index) => (
             <React.Fragment key={item.href}>
-              <Link href={item.href} className="hover:text-white transition-colors">
+              <Link href={item.href} className="hover:text-red-600 dark:hover:text-white transition-colors">
                 {item.label}
               </Link>
               {index < subMenuLinks.length - 1 && (
-                <span className="text-gray-700 hidden sm:inline select-none">•</span>
+                <span className="text-slate-300 dark:text-gray-700 hidden sm:inline select-none">•</span>
               )}
             </React.Fragment>
           ))}
         </div>
 
         {/* OUR NETWORK & INITIATIVES (With Logos) */}
-        <div className="py-4 border-b border-gray-800/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+        <div className="py-4 border-b border-slate-200 dark:border-gray-800/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="text-[11px] font-bold text-slate-700 dark:text-gray-400 uppercase tracking-widest">
             {isEn ? "Our Network & Initiatives:" : "हमारे नेटवर्क एवं पहल:"}
           </span>
           <div className="flex items-center gap-4 flex-wrap justify-center">
@@ -191,10 +191,10 @@ export default function Footer() {
               href="https://socialcraft.thefreelance.in/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center px-4 py-2 rounded-xl bg-white/[0.04] border border-white/10 hover:border-violet-500/50 hover:bg-violet-950/20 transition-all shadow-sm"
+              className="group flex items-center px-4 py-2 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 hover:border-violet-500/50 hover:bg-violet-50 dark:hover:bg-violet-950/20 transition-all shadow-sm"
               title="SocialCraft - Social Media Management & Digital Growth Agency"
             >
-              <span className="font-black text-base tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-pink-400 to-orange-400 group-hover:scale-105 transition-transform select-none">
+              <span className="font-black text-base tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-pink-600 to-orange-500 dark:from-violet-400 dark:via-pink-400 dark:to-orange-400 group-hover:scale-105 transition-transform select-none">
                 SocialCraft
               </span>
             </a>
@@ -205,7 +205,7 @@ export default function Footer() {
               href="https://voteraction.thefreelance.in/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 hover:border-blue-500/50 hover:bg-blue-950/20 transition-all shadow-sm"
+              className="group flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 hover:border-blue-500/50 hover:bg-blue-50 dark:hover:bg-blue-950/20 transition-all shadow-sm"
               title="VoterAction - Empowering Citizens & Democracy"
             >
               <img
@@ -213,7 +213,7 @@ export default function Footer() {
                 alt="VoterAction"
                 className="h-7 w-auto object-contain group-hover:scale-105 transition-transform"
               />
-              <span className="text-xs font-bold text-white group-hover:text-blue-400 transition-colors">
+              <span className="text-xs font-bold text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                 VoterAction
               </span>
             </a>
@@ -223,7 +223,7 @@ export default function Footer() {
               href="https://shopath.in/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-950/20 transition-all shadow-sm"
+              className="group flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-all shadow-sm"
               title="Shopath.in - Smart Quick Commerce & Local Shopping Platform"
             >
               <img
@@ -231,7 +231,7 @@ export default function Footer() {
                 alt="Shopath"
                 className="h-7 w-7 object-contain rounded-md group-hover:scale-105 transition-transform"
               />
-              <span className="text-xs font-bold text-white group-hover:text-emerald-400 transition-colors">
+              <span className="text-xs font-bold text-slate-800 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                 Shopath.in
               </span>
             </a>
@@ -239,9 +239,9 @@ export default function Footer() {
         </div>
 
         {/* BOTTOM SECTION: COPYRIGHT */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-3">
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-gray-500 gap-3">
           <p>© {currentYear} The Freelance (TFL). {isEn ? "All rights reserved." : "सर्वाधिकार सुरक्षित।"}</p>
-          <p className="text-[11px] text-gray-600">
+          <p className="text-[11px] text-slate-500 dark:text-gray-600">
             Powered by Next.js & Google Cloud • Real-Time News Intelligence
           </p>
         </div>

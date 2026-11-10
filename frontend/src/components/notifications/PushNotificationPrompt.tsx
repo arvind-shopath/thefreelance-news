@@ -116,9 +116,9 @@ export default function PushNotificationPrompt() {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-md z-50 animate-in fade-in slide-in-from-bottom-5 duration-300">
-      <div className="bg-[#12141c]/95 backdrop-blur-md border border-red-600/30 rounded-2xl p-4 shadow-2xl text-white">
+      <div className="push-notification-card bg-white/95 dark:bg-[#12141c]/95 backdrop-blur-md border border-slate-200 dark:border-red-600/30 rounded-2xl p-4 shadow-2xl text-slate-900 dark:text-white transition-all">
         {isSubscribed ? (
-          <div className="flex items-center gap-3 text-emerald-400 font-bold text-sm">
+          <div className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400 font-bold text-sm">
             <span className="text-xl">✅</span>
             <span>
               {isEnglish 
@@ -129,14 +129,14 @@ export default function PushNotificationPrompt() {
         ) : (
           <div className="space-y-3">
             <div className="flex items-start gap-3">
-              <div className="p-2.5 bg-red-600/20 text-red-500 rounded-xl text-lg flex-shrink-0">
+              <div className="push-icon-box p-2.5 bg-red-50 dark:bg-red-600/20 text-red-600 dark:text-red-500 rounded-xl text-lg flex-shrink-0 border border-red-100 dark:border-transparent">
                 🔔
               </div>
               <div>
-                <h4 className="text-sm font-bold text-white leading-snug">
+                <h4 className="push-title text-sm font-bold text-slate-900 dark:text-white leading-snug">
                   {isEnglish ? 'Breaking News Alerts' : 'ताज़ा ब्रेकिंग न्यूज़ अलर्ट'}
                 </h4>
-                <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+                <p className="push-desc text-xs text-slate-600 dark:text-gray-300 mt-1 leading-relaxed">
                   {isEnglish
                     ? 'Get instant updates on major global events directly on your screen.'
                     : 'देश और दुनिया की बड़ी खबरों की सूचना सीधे अपनी स्क्रीन पर पाएं। कोई स्पैम नहीं।'}
@@ -144,17 +144,19 @@ export default function PushNotificationPrompt() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-1 border-t border-gray-800">
+            <div className="push-divider flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-gray-800">
               <button
+                type="button"
                 onClick={handleDismiss}
-                className="px-3 py-1.5 text-xs text-gray-400 hover:text-white font-medium transition-colors"
+                className="push-dismiss px-3 py-1.5 text-xs text-slate-500 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white font-medium transition-colors"
               >
                 {isEnglish ? 'Maybe Later' : 'बाद में'}
               </button>
               <button
+                type="button"
                 onClick={handleSubscribe}
                 disabled={isSubscribing}
-                className="px-4 py-1.5 text-xs font-bold bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white rounded-lg shadow-lg shadow-red-600/20 transition-all flex items-center gap-1.5"
+                className="push-allow px-4 py-1.5 text-xs font-bold bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white rounded-lg shadow-md shadow-red-600/20 transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 {isSubscribing ? (
                   <span>⏳...</span>
