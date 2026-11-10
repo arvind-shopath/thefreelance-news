@@ -1,0 +1,51 @@
+name: Deploy News Portal to Cloudflare Workers
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy-cloudflare.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: cf-deploy-news
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci --legacy-peer-deps
+
+      - name: Build Next.js app with OpenNext
+        working-directory: frontend
+        env:
+          NEXT_PUBLIC_SITE_URL: https://news.thefreelance.in
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL || secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          ADMIN_API_SECRET: ${{ secrets.ADMIN_API_SECRET }}
+        run: npx @opennextjs/cloudflare build
+
+      - name: Deploy to Cloudflare Workers
+        working-directory: frontend
+        env:
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy
