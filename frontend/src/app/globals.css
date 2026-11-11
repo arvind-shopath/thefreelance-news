@@ -374,6 +374,41 @@ body {
   color: #0f172a !important;
 }
 
+/* 7a-2. Contextual Read More ('यह भी पढ़ें' / 'संबंधित बड़ी खबर') Callouts in Light Mode */
+[data-theme="light"] .contextual-read-more {
+  background: linear-gradient(to right, rgba(254, 242, 242, 0.95), #ffffff, #f8fafc) !important;
+  border-left-color: #dc2626 !important;
+  border-top-color: #e2e8f0 !important;
+  border-right-color: #e2e8f0 !important;
+  border-bottom-color: #e2e8f0 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .contextual-read-more:hover {
+  border-right-color: #fca5a5 !important;
+  border-top-color: #fca5a5 !important;
+  border-bottom-color: #fca5a5 !important;
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.08) !important;
+}
+
+[data-theme="light"] .contextual-read-more h4,
+[data-theme="light"] .contextual-read-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .contextual-read-more:hover h4,
+[data-theme="light"] .contextual-read-more:hover .contextual-read-title {
+  color: #dc2626 !important;
+}
+
+[data-theme="light"] .contextual-read-link {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .contextual-read-more:hover .contextual-read-link {
+  color: #dc2626 !important;
+}
+
 /* 7b. Editorial Desk Card */
 [data-theme="light"] .editorial-desk-card {
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
