@@ -2,9 +2,119 @@
 
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { getPublicSupabase } from './supabase';
+import { queryD1 } from './d1';
 
 const API_BASE = process.env.INTERNAL_API_BASE || process.env.NEXT_PUBLIC_API_BASE || "https://thefreelance.in/api/v1";
 const ADMIN_SECRET = process.env.ADMIN_API_SECRET || "tfl_master_internal_admin_token_2026_xyz9723338321";
+
+// In-Memory Edge Cache for Cloudflare D1
+const d1MemoryCache = new Map<string, { data: any; expiry: number; staleFallback: any }>();
+const D1_CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes fresh cache
+
+// Helper for Cloudflare D1 Direct Query (100% Free, Unlimited Egress)
+export async function tryFetchFromD1(endpoint: string) {
+  const cached = d1MemoryCache.get(endpoint);
+  if (cached && Date.now() < cached.expiry) {
+    return cached.data;
+  }
+
+  try {
+    let result: any = null;
+
+    // 1. Single article by slug (/articles/slug/:slug)
+    if (endpoint.startsWith('/articles/slug/')) {
+      const slug = decodeURIComponent(endpoint.replace('/articles/slug/', '').split('?')[0]);
+      const rows = await queryD1('SELECT * FROM Post WHERE (slug = ? OR slugEn = ?) AND isPublished = 1 LIMIT 1', [slug, slug]);
+      if (rows && rows.length > 0) {
+        const post = rows[0];
+        const slides = await queryD1('SELECT * FROM StorySlide WHERE postId = ? ORDER BY orderIndex ASC', [post.id]);
+        post.slides = slides || [];
+        result = { data: post };
+      }
+    }
+
+    // 2. Categories (/categories)
+    else if (endpoint.startsWith('/categories')) {
+      const rows = await queryD1('SELECT * FROM Category ORDER BY orderIndex ASC, name ASC');
+      if (rows && rows.length > 0) result = rows;
+    }
+
+    // 3. Homepage sections (/homepage/sections)
+    else if (endpoint.startsWith('/homepage/sections')) {
+      const rows = await queryD1('SELECT * FROM HomepageSection WHERE isActive = 1 ORDER BY orderIndex ASC');
+      if (rows && rows.length > 0) result = rows;
+    }
+
+    // 4. Ads (/ads)
+    else if (endpoint.startsWith('/ads')) {
+      const rows = await queryD1('SELECT * FROM AdPlacement WHERE isActive = 1');
+      if (rows && rows.length > 0) result = rows;
+    }
+
+    // 5. Horoscopes (/feeds/horoscope)
+    else if (endpoint.startsWith('/feeds/horoscope')) {
+      const rows = await queryD1('SELECT * FROM Horoscope ORDER BY zodiacSign ASC');
+      if (rows && rows.length > 0) result = rows;
+    }
+
+    // 6. Articles list (/articles?...)
+    else if (endpoint.startsWith('/articles')) {
+      const url = new URL(`https://dummy.local${endpoint}`);
+      const cat = url.searchParams.get('category');
+      const limit = parseInt(url.searchParams.get('limit') || '50', 10);
+      const lang = url.searchParams.get('lang');
+      const postType = url.searchParams.get('postType');
+      const sortBy = url.searchParams.get('sortBy');
+      const wantsFull = url.searchParams.get('fullContent') === 'true';
+
+      const selectCols = wantsFull
+        ? '*'
+        : 'id, headline, headlineEn, slug, slugEn, summary, summaryEn, image, imageCaption, categoryStr, state, city, tags, author, postType, views, isFeatured, isTrending, isBreaking, isPublished, isEnglishOnly, createdAt';
+
+      let whereClauses = ['isPublished = 1'];
+      let params: any[] = [];
+
+      if (cat && cat !== 'all') {
+        whereClauses.push('categoryStr = ?');
+        params.push(cat);
+      }
+      if (postType && postType !== 'all') {
+        whereClauses.push('postType = ?');
+        params.push(postType);
+      }
+      if (postType === 'visual-story') {
+        // visual story
+      } else if (lang === 'en') {
+        whereClauses.push('(isEnglishOnly = 1 OR (headlineEn IS NOT NULL AND headlineEn != ""))');
+      } else if (lang === 'hi') {
+        whereClauses.push('isEnglishOnly = 0');
+      }
+
+      const orderBy = sortBy === 'views' ? 'views DESC' : 'createdAt DESC';
+      const sql = `SELECT ${selectCols} FROM Post WHERE ${whereClauses.join(' AND ')} ORDER BY ${orderBy} LIMIT ?`;
+      params.push(limit);
+
+      const rows = await queryD1(sql, params);
+      if (rows) {
+        result = { data: rows, total: rows.length };
+      }
+    }
+
+    if (result !== null) {
+      d1MemoryCache.set(endpoint, {
+        data: result,
+        expiry: Date.now() + D1_CACHE_TTL_MS,
+        staleFallback: result,
+      });
+      return result;
+    }
+  } catch (err) {
+    console.warn(`[D1 Fetch Error] Endpoint: ${endpoint}`, err);
+    if (cached?.staleFallback) return cached.staleFallback;
+  }
+
+  return cached ? cached.staleFallback : null;
+}
 
 // In-Memory Edge Cache to eliminate 99% of Supabase Egress
 const supabaseMemoryCache = new Map<string, { data: any; expiry: number; staleFallback: any }>();
@@ -164,8 +274,12 @@ export async function tryFetchFromSupabase(endpoint: string) {
 export async function apiFetch(endpoint: string, options: any = {}) {
   const isGet = !options.method || options.method === 'GET';
 
-  // For GET requests, check Supabase first if available
+  // For GET requests, check Cloudflare D1 first (100% Free, Unlimited Egress)
   if (isGet) {
+    const d1Data = await tryFetchFromD1(endpoint);
+    if (d1Data !== null) {
+      return d1Data;
+    }
     const supabaseData = await tryFetchFromSupabase(endpoint);
     if (supabaseData !== null) {
       return supabaseData;

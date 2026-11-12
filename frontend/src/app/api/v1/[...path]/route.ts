@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { tryFetchFromSupabase } from "@/lib/actions";
+import { tryFetchFromD1, tryFetchFromSupabase } from "@/lib/actions";
 
 export async function GET(
   req: NextRequest,
@@ -9,9 +9,14 @@ export async function GET(
   const endpoint = `/${path.join("/")}${req.nextUrl.search}`;
 
   try {
-    const data = await tryFetchFromSupabase(endpoint);
+    const data = await tryFetchFromD1(endpoint);
     if (data !== null) {
       return NextResponse.json(data);
+    }
+
+    const sbData = await tryFetchFromSupabase(endpoint);
+    if (sbData !== null) {
+      return NextResponse.json(sbData);
     }
 
     return NextResponse.json(
