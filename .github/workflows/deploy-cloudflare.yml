@@ -40,12 +40,16 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL || secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           ADMIN_API_SECRET: ${{ secrets.ADMIN_API_SECRET }}
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY || 'cb322ea2cf9e5c848c5876748c7ed3bf84fcb' }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL || 'arvind.shukla64@gmail.com' }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || '5294ebf66d98c4fb5b5ea11a27e9ce09' }}
+          CLOUDFLARE_D1_DATABASE_ID: ${{ secrets.CLOUDFLARE_D1_DATABASE_ID || '84e0866f-fbd1-4527-9543-9ed7e727e2ee' }}
         run: npx @opennextjs/cloudflare build
 
       - name: Deploy to Cloudflare Workers
         working-directory: frontend
         env:
-          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
-          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY || 'cb322ea2cf9e5c848c5876748c7ed3bf84fcb' }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL || 'arvind.shukla64@gmail.com' }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || '5294ebf66d98c4fb5b5ea11a27e9ce09' }}
         run: npx wrangler deploy

@@ -37,6 +37,10 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY || 'cb322ea2cf9e5c848c5876748c7ed3bf84fcb' }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL || 'arvind.shukla64@gmail.com' }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || '5294ebf66d98c4fb5b5ea11a27e9ce09' }}
+          CLOUDFLARE_D1_DATABASE_ID: ${{ secrets.CLOUDFLARE_D1_DATABASE_ID || '84e0866f-fbd1-4527-9543-9ed7e727e2ee' }}
         run: |
           cd ai-engine
           npm run run:viral-videos

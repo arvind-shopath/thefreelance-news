@@ -428,7 +428,7 @@ export async function getDb(lang: 'hi' | 'en' = 'hi') {
   // 2. Main Section Data (All Categories except excluded)
   const mainSetting = homepageSettings.find((s: any) => s.sectionType === 'main-section');
   const excludedSlugs = mainSetting?.excludeCategories?.split(',').map((s: string) => s.trim()) || [];
-  const mainPosts = posts.filter((p: any) => !excludedSlugs.includes(p.categoryStr) && p.postType === 'general');
+  const mainPosts = posts.filter((p: any) => !excludedSlugs.includes(p.categoryStr) && (p.postType === 'general' || p.postType === 'article' || !p.postType));
 
   // 3. Visual Stories: Newest first, strictly isolated by portal language
   const rawVisualStories = visualStoriesData?.data || [];
